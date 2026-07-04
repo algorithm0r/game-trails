@@ -1,9 +1,14 @@
 # Game Trails
 
-TODO: describe
+An agent-based model of how animal movement carves trails through vegetation. A grid of brush
+grows thicker over time; "game" (animals of varying body size) move through it. Body size sets
+each animal's speed, how thick a brush it can push through, and how much it tramples. Passage
+thins the brush, and animals steer toward already-thinned cells — so repeated traffic
+concentrates into persistent **trails** that fade where unused. Small game can't force through
+dense brush and comes to depend on the trails cut by larger game.
 
-A browser-based agent-based simulation (vanilla JS + Canvas, no build step), scaffolded from
-the shared engine v2.
+A browser-based simulation (vanilla JS + Canvas, no build step), scaffolded from the shared
+engine v2.
 
 ## Run
 - **Browser:** open `index.html`.

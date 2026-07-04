@@ -7,7 +7,7 @@ function reset() {
   gameEngine.clear();
   const cv = gameEngine.ctx.canvas;
   world = new World(cv.width, cv.height);
-  const graph = new LineGraph(10, 10, 200, 80, 'mean X');
+  const graph = new LineGraph(10, 10, 200, 80, 'mean brush (land)');
   db = createDB(PARAMETERS.db);
   dataManager = new DataManager(world, db, graph);
   gameEngine.add(world);

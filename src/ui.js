@@ -8,19 +8,34 @@ function buildControls() {
     const wrap = document.createElement('label');
     wrap.className = 'ctl';
     wrap.appendChild(document.createTextNode(spec.label + ' '));
-    const input = document.createElement('input');
-    input.type = 'range';
-    input.min = spec.min; input.max = spec.max; input.step = spec.step;
-    input.value = PARAMETERS[spec.key];
-    const val = document.createElement('span');
-    val.textContent = ' ' + PARAMETERS[spec.key];
-    input.oninput = function () {
-      PARAMETERS[spec.key] = parseFloat(input.value);
-      val.textContent = ' ' + input.value;
-      if (spec.resets && typeof reset === 'function') reset();
-    };
-    wrap.appendChild(input);
-    wrap.appendChild(val);
+    if (spec.type === 'select') {
+      const sel = document.createElement('select');
+      for (const opt of spec.options) {
+        const o = document.createElement('option');
+        o.value = opt; o.textContent = opt;
+        if (PARAMETERS[spec.key] === opt) o.selected = true;
+        sel.appendChild(o);
+      }
+      sel.onchange = function () {
+        PARAMETERS[spec.key] = sel.value;
+        if (spec.resets && typeof reset === 'function') reset();
+      };
+      wrap.appendChild(sel);
+    } else {
+      const input = document.createElement('input');
+      input.type = 'range';
+      input.min = spec.min; input.max = spec.max; input.step = spec.step;
+      input.value = PARAMETERS[spec.key];
+      const val = document.createElement('span');
+      val.textContent = ' ' + PARAMETERS[spec.key];
+      input.oninput = function () {
+        PARAMETERS[spec.key] = parseFloat(input.value);
+        val.textContent = ' ' + input.value;
+        if (spec.resets && typeof reset === 'function') reset();
+      };
+      wrap.appendChild(input);
+      wrap.appendChild(val);
+    }
     panel.appendChild(wrap);
   }
 }

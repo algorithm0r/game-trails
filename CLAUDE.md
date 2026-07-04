@@ -6,7 +6,14 @@
 3. `DEVPLAN.md` — the current `[ ACTIVE ]` stage
 
 ## What this is
-TODO: describe
+An agent-based model of emergent animal trails. A grid of brush (thickness 0..1) regrows
+logistically each tick; game animals of varying body size move through it. Size drives three
+things — speed (`baseSpeed*size`), the thickest brush an animal can pass (`capacity =
+capacityCoef*size`, capped at 1), and how much it tramples per pass (`trampleCoef*size`).
+Animals steer down a forward cone toward thinner brush; passage thins cells, so traffic
+self-concentrates into persistent trails (the core positive-feedback loop). Metrics:
+`meanThickness`, `clearedFraction` (cells below `clearThreshold`), and `thicknessCV` (spatial
+heterogeneity — the signature of trail structure).
 
 ## Stack (never violate)
 - Vanilla JS + Canvas. No build step, no framework, no modules. `<script>` tags load

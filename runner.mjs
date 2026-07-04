@@ -20,7 +20,7 @@ const ticksOverride = parseInt(flag('ticks', '0'), 10);
 // because everything is declared `var` / `var X = class X` — no const→var patch needed)
 const ctx = { Math, console, Date };
 vm.createContext(ctx);
-for (const f of ['util.js', 'params.js', 'engine.js', 'agent.js', 'world.js']) {
+for (const f of ['util.js', 'params.js', 'engine.js', 'pathfield.js', 'agent.js', 'world.js']) {
   vm.runInContext(readFileSync(path.join(__dirname, 'src', f), 'utf8'), ctx, { filename: f });
 }
 
@@ -39,10 +39,22 @@ for (let r = 0; r < reps; r++) {
   for (let t = 1; t <= limit; t++) {
     engine.tick = t;
     world.update(engine);
-    if (t % P.reportingPeriod === 0) samples.push({ tick: t, meanX: world.meanX() });
+    if (t % P.reportingPeriod === 0) samples.push({
+      tick: t,
+      meanThickness: world.meanThickness(),
+      clearedFraction: world.clearedFraction(),
+      thicknessCV: world.thicknessCV(),
+    });
   }
-  const pkt = db.packet(P, { run, samples, finalMeanX: world.meanX() });
+  const pkt = db.packet(P, {
+    run, samples,
+    finalMeanThickness: world.meanThickness(),
+    finalClearedFraction: world.clearedFraction(),
+    finalThicknessCV: world.thicknessCV(),
+  });
   const res = await db.insert(collection || run, pkt);
-  console.log(run + ': finalMeanX=' + world.meanX().toFixed(3) + '  saved=' + JSON.stringify(res));
+  console.log(run + ': meanThickness=' + world.meanThickness().toFixed(3) +
+    '  cleared=' + world.clearedFraction().toFixed(3) +
+    '  CV=' + world.thicknessCV().toFixed(3) + '  saved=' + JSON.stringify(res));
 }
 await db.close();
