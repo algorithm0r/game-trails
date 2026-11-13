@@ -31,7 +31,9 @@ var PARAMETERS = {
   thirstThreshold: 350,  // ticks before an animal is forced to route to the pond to drink
 
   // --- pathfinding (goal fields, a.k.a. Dijkstra maps) ---
-  fieldsPerTick: 0,      // max fields rebuilt per tick (time-slice budget); 0 = rebuild ALL
+  fieldsPerTick: 16,     // max fields rebuilt per tick (time-slice budget); 0 = rebuild ALL.
+                         // 16 (2026-11-13): ~4x faster per tick than 0, same trails at 1500 ticks
+                         // (DEVLOG); set 0 for exact every-tick routing.
 
   // --- engine ---
   updatesPerDraw: 1,     // fast-forward: sim updates per rendered frame
@@ -54,16 +56,18 @@ var PARAMETERS = {
 // `resets: true` rebuilds the world when the control changes (needed when the change alters
 // agent count or the size-bucketing, both baked in at construction).
 var PARAM_SCHEMA = [
-  { key: 'nAgents', label: 'Game count', min: 0, max: 400, step: 5, resets: true },
-  { key: 'sizeBuckets', label: 'Size classes', min: 1, max: 10, step: 1, resets: true },
+  // the strip under the world: the few knobs a first-time viewer needs
+  { key: 'nAgents', label: 'Animals', min: 0, max: 400, step: 5, resets: true },
+  { key: 'growthRate', label: 'Regrowth rate', min: 0, max: 0.08, step: 0.002 },
+  { key: 'dragCoef', label: 'Brush drag', min: 0, max: 8, step: 0.5 },
   { key: 'growthModel', label: 'Regrowth model', type: 'select',
     options: ['saturating', 'linear', 'logistic'] },
-  { key: 'growthRate', label: 'Regrowth rate', min: 0, max: 0.08, step: 0.002 },
-  { key: 'baseSpeed', label: 'Base speed', min: 0.5, max: 8, step: 0.5 },
-  { key: 'dragCoef', label: 'Brush drag', min: 0, max: 8, step: 0.5 },
-  { key: 'capacityCoef', label: 'Clear capacity', min: 0.1, max: 1, step: 0.05 },
-  { key: 'clearPct', label: 'Clear amount', min: 0, max: 0.8, step: 0.05 },
-  { key: 'thirstThreshold', label: 'Thirst interval', min: 50, max: 1500, step: 50 },
-  { key: 'fieldsPerTick', label: 'Field budget (0=all)', min: 0, max: 120, step: 5 },
-  { key: 'updatesPerDraw', label: 'Sim speed', min: 1, max: 20, step: 1 },
+  { key: 'updatesPerDraw', label: 'Steps per frame', min: 1, max: 20, step: 1 },
+  // `advanced: true` puts a control behind the "More controls" fold (ui.js)
+  { key: 'sizeBuckets', label: 'Size classes', min: 1, max: 10, step: 1, resets: true, advanced: true },
+  { key: 'baseSpeed', label: 'Base speed', min: 0.5, max: 8, step: 0.5, advanced: true },
+  { key: 'capacityCoef', label: 'Clear capacity', min: 0.1, max: 1, step: 0.05, advanced: true },
+  { key: 'clearPct', label: 'Clear amount', min: 0, max: 0.8, step: 0.05, advanced: true },
+  { key: 'thirstThreshold', label: 'Thirst interval', min: 50, max: 1500, step: 50, advanced: true },
+  { key: 'fieldsPerTick', label: 'Route maps rebuilt per tick (0 = all)', min: 0, max: 120, step: 1, advanced: true },
 ];

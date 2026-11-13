@@ -3,6 +3,36 @@ Newest entry on top. **Append only — never edit past entries.**
 
 <!-- append new entries above this line -->
 
+## 2026-11-13 — Live view on Claude Basic 0.6.0, ready to show
+**Done:** first live-browser look at the Observer (it rendered; the old view was a left control
+column, a raw-hex canvas and a graph drawn over the map). Vendored **Claude Basic 0.6.0**
+(`vendor/`, byte-identical to Flea Jumping's copy, kit `v0.6.0-1-g3279460` = the v0.6.0 dist
+stamp) and rebuilt the page on its sim layer: `cb-sim` layout, controls under the world
+(`CB.sim.controls`: 5 basic, 6 more behind a "More controls" fold, Pause/Run + Reset),
+`<cb-sim-clock>` (500-tick laps), a `<cb-sim-legend>` keyed to the map's own colours,
+three `<cb-sim-series>` charts (mean brush, cleared share, thickness CV) whose legends carry
+the latest value, a theme picker, and a short "What am I looking at?" card. The Observer now
+takes token-resolved colours from `ui.js` (no raw hex; re-resolved on `cb-theme`), paints the
+grid as one smoothed `drawImage`, outlines animals, and scales radius `2 + 1.4·size`.
+**Default field budget 16** (`fieldsPerTick` 0 → 16): in the browser 45 → 11 ms/tick
+(+1.5 ms draw), so ~20 → ~60 ticks/s at 60 Hz; trails read as a network by tick ~200.
+Headless 800×600 at tick 1500 (mean/cleared/CV): budget 0 = 0.893/0.104/0.339 (1 rep);
+budget 16 = 0.882/0.111/0.354 and 0.885/0.109/0.351 (2 reps, via `cpuslot run`).
+**Changed:** `index.html`, `src/ui.js`, `src/main.js`, `src/observer.js`, `src/datamanager.js`
+(per-metric arrays for the charts), `src/params.js` (schema relabelled/grouped with
+`advanced`, budget default); removed `src/charts.js` (LineGraph); README + CLAUDE.md name the
+vendored kit.
+**State:** smoke **PASS** @ d541d77-dirty (pre-commit) — control(mean=1.000 cv=0.000) vs
+game(mean=0.842 cv=0.410 cleared=0.139 nearPond=0.706). Checked by eye in the browser pane via
+the Static Server (`localhost:8000/documents/...`): basic + paper themes, 1440×900 and 375×812,
+Pause, a resetting slider, the fold. Not seen: real-time frame rate (the pane was hidden, so
+rAF didn't fire; ticks/s above is derived from measured per-tick cost). Known: the browser's
+tick-1500 auto-save fails (`root is not defined` in the stale project `src/db.js`; the
+canonical `~/.claude/scaffold/db.js` has the fix) — nothing is written from the page.
+**Next:** Chris decides whether the browser view should save packets at all before `db.js` is
+re-vendored; then Stage 3.
+
+
 ## 2026-07-04 — Stage 2: goal-field routing, pond + waypoints
 **Done:** rebuilt movement around destinations. Bounded grid with a central **pond** (impassable
 water; its banks are drink-waypoints) plus interior + per-edge **waypoints**; animals cycle

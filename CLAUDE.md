@@ -26,6 +26,9 @@ heterogeneity — the signature of trail structure).
 - **Model/view split:** the world holds state and never draws; the `Observer` renders it.
 - **Config:** one `PARAMETERS` global (`params.js`), serialized verbatim into every saved
   packet. `PARAM_SCHEMA` drives the control panel.
+- **UI kit:** Claude Basic, pinned copy in `vendor/` (`cb-` classes, `--cb-*` tokens, no raw hex
+  in UI code; the Observer's colours are resolved from tokens in `ui.js`). Never edit `vendor/`;
+  kit bugs go to the kit's repo.
 - **DB:** the vendored standard client `src/db.js` (see `~/.claude/conventions.md` §4).
   Use `db.packet()`, `db.nextBatch()`, and `db.scratch()` for throwaway work.
 

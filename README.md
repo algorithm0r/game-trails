@@ -11,14 +11,17 @@ A browser-based simulation (vanilla JS + Canvas, no build step), scaffolded from
 engine v2.
 
 ## Run
-- **Browser:** open `index.html`.
+- **Browser:** open `index.html` (or http://localhost:8000/documents/Research/Game%20Trails/sim/
+  on the always-on Static Server). The live view is built on Claude Basic (vendored in `vendor/`).
 - **Headless batch:** `node runner.mjs --reps 50` — runs the same sim core via `vm` and writes
   self-describing packets to MongoDB through the research Server.
 - **Smoke test:** `node smoketest.mjs` — no DB; asserts the model invariant and prints metrics.
 
 ## Layout
-- `src/` — sim core (`engine`, `params`, `world`, `agent`, `observer`, `datamanager`, `charts`,
+- `src/` — sim core (`engine`, `params`, `world`, `agent`, `pathfield`, `observer`, `datamanager`,
   `util`) + `db.js` (vendored standard DB client) + `ui.js`/`main.js` (browser-only, all DOM).
+- `vendor/` — Claude Basic `dist/` (pinned copy; version in the file headers and DEVLOG). Never
+  edit it; re-vendor from the kit to upgrade.
 - `runner.mjs` / `smoketest.mjs` — headless entry points.
 - `DEVPLAN.md` / `DEVLOG.md` — the plan (forward) and the log (backward, append-only).
 

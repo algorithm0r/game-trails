@@ -1,41 +1,80 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Game Trails</title>
-  <style>
-    body { margin: 0; background: #11151c; color: #cdd2da; font-family: system-ui, sans-serif; display: flex; }
-    #controlPanel { width: 240px; padding: 14px; box-sizing: border-box; }
-    #controlPanel h3 { margin: 0 0 10px; }
-    .ctl { display: block; margin: 10px 0; font-size: 13px; }
-    .ctl input { width: 100%; }
-    button { background: #2b6cf6; color: #fff; border: 0; border-radius: 6px; padding: 6px 12px; cursor: pointer; }
-    #status { font-size: 12px; color: #8a8f98; margin-top: 12px; }
-    canvas { background: #0b0e13; display: block; }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Game Trails</title>
+<!-- Claude Basic, vendored and pinned (see DEVLOG for the version) -->
+<link rel="stylesheet" href="vendor/claude-basic.css">
+<script src="vendor/claude-basic.js"></script>
+<style>
+  .top { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; padding: 14px var(--cb-gap) 0; }
+  .top .spacer { flex: 1; }
+  .top h1 { margin: 0; font-size: 20px; }
+  .top .note { color: var(--cb-muted); font-size: 12px; }
+  #gameWorld { width: 100%; height: auto; }
+  .about h2 { margin-top: 0; }
+  .about p { font-size: 13px; }
+</style>
 </head>
 <body>
-  <div id="controlPanel">
-    <h3>Game Trails</h3>
-    <button onclick="reset()">Reset</button>
-    <div id="status"></div>
-  </div>
-  <canvas id="gameWorld" width="800" height="600"></canvas>
+<div class="top">
+  <h1 class="cb-title">Game Trails<span class="cb-dot">.</span></h1>
+  <span class="note">animals of different sizes wear trails through regrowing brush on their way to water</span>
+  <span class="spacer"></span>
+  <span id="picker"></span>
+</div>
 
-  <!-- socket.io client (for the standard DB client in socket mode) -->
-  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
-  <!-- sim core, in dependency order; main.js last -->
-  <script src="src/util.js"></script>
-  <script src="src/params.js"></script>
-  <script src="src/db.js"></script>
-  <script src="src/engine.js"></script>
-  <script src="src/pathfield.js"></script>
-  <script src="src/agent.js"></script>
-  <script src="src/world.js"></script>
-  <script src="src/observer.js"></script>
-  <script src="src/charts.js"></script>
-  <script src="src/datamanager.js"></script>
-  <script src="src/ui.js"></script>
-  <script src="src/main.js"></script>
+<div class="cb-sim">
+  <div class="cb-sim-stage">
+    <div class="cb-sim-world"><canvas id="gameWorld" width="800" height="600"></canvas></div>
+    <div class="cb-sim-bar">
+      <cb-sim-clock id="clock" period="500" count size="76" cycle-label="500-tick lap" unit-label="tick"></cb-sim-clock>
+      <cb-sim-legend id="legend"></cb-sim-legend>
+    </div>
+    <div id="controls"></div>
+    <details class="cb-disclosure">
+      <summary>More controls</summary>
+      <div class="body"><div id="moreControls"></div></div>
+    </details>
+  </div>
+
+  <div class="cb-sim-charts">
+    <div class="cb-card about wide cb-prose">
+      <h2>What am I looking at?</h2>
+      <p>Green is brush, and the bare lines worn through it are trails (the key under the map
+        shows the shades). The dots are animals, bigger and redder for a larger body. Each one
+        walks between the ringed destinations and, when it gets thirsty, to the pond.</p>
+      <p>An animal takes the cheapest route for its size. Thick brush slows small animals far
+        more than big ones, and animals knock brush down as they pass (only big ones can break
+        through the thickest). Brush grows back.</p>
+      <p>So a route that has been used is cheaper for the next animal. Trails appear within a
+        few hundred ticks, join into a network that leads to water, and grow over when nobody
+        uses them.</p>
+      <p>The charts: brush regrows from its patchy start, but the trails hold mean thickness
+        below the 1.0 it would reach with no animals. The cleared share is the land that is
+        trail. The CV is high when thin trails cut through thick brush and near 0 when the
+        brush is uniform.</p>
+    </div>
+    <cb-sim-series id="brush" label="Mean brush thickness (0 bare – 1 dense)" fraction x-label="tick" class="wide"></cb-sim-series>
+    <cb-sim-series id="cleared" label="Cleared share of the land (trail cells)" fraction x-label="tick"></cb-sim-series>
+    <cb-sim-series id="cv" label="Trail structure (spatial CV of thickness)" y-min="0" x-label="tick"></cb-sim-series>
+  </div>
+</div>
+
+<!-- socket.io client (for the standard DB client in socket mode) -->
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<!-- sim core, in dependency order; main.js last -->
+<script src="src/util.js"></script>
+<script src="src/params.js"></script>
+<script src="src/db.js"></script>
+<script src="src/engine.js"></script>
+<script src="src/pathfield.js"></script>
+<script src="src/agent.js"></script>
+<script src="src/world.js"></script>
+<script src="src/observer.js"></script>
+<script src="src/datamanager.js"></script>
+<script src="src/ui.js"></script>
+<script src="src/main.js"></script>
 </body>
 </html>
