@@ -24,17 +24,17 @@ commit). Real-time frame rate not observed (hidden pane); derived ~60 ticks/s.
 - pond-pull — ring around the pond markedly more cleared than the map (trunk trails to water)
 
 ## Branches
-- `main` (remote `origin` = public GitHub repo; this session's commit is local, not pushed)
+- `main` = `origin/main` (public GitHub repo); served live at https://algorithm0r.github.io/game-trails/ (checked 2026-11-13)
 
 ## Open
-- Browser auto-save at tick 1500 fails (`root is not defined`, stale `src/db.js`); nothing is
+- Browser auto-save at tick 1500 fails (live page too) (`root is not defined`, stale `src/db.js`); nothing is
   written from the page. Fix by re-vendoring the canonical `db.js`, but decide first whether a
   demo page should write to the research DB (Backlog).
 - Stage 3: payoff-driven forage patches; size/energy trade-off.
 
 ## Next action
-Chris looks at the page (http://localhost:8000/documents/Research/Game%20Trails/sim/) and
-approves a push; then decide the browser-save question; then Stage 3.
+Chris reads the live page (https://algorithm0r.github.io/game-trails/) before the TCSS 600
+demo; then decide the browser-save question; then Stage 3.
 
 ## Blockers
 - none

@@ -3,6 +3,16 @@ Newest entry on top. **Append only — never edit past entries.**
 
 <!-- append new entries above this line -->
 
+## 2026-11-13 — Published: fb79974 live on GitHub Pages
+**Done:** fb79974 reached `origin/main` (Chris approved publishing; the push came from this
+checkout, not from this session, whose own push was refused by its permission check).
+**Changed:** STATUS and the PA hub now say pushed + live instead of local-only.
+**State:** live page https://algorithm0r.github.io/game-trails/ serves the new HTML (Claude Basic
+links, "What am I looking at?" card); `vendor/claude-basic.js` 200; deleted `src/charts.js` 404.
+Smoke PASS @ fb79974. The tick-1500 browser DB save still fails on the live page (stale `db.js`).
+**Next:** Chris reads the live page before the TCSS 600 demo; decide the browser-save question;
+then Stage 3.
+
 ## 2026-11-13 — Live view on Claude Basic 0.6.0, ready to show
 **Done:** first live-browser look at the Observer (it rendered; the old view was a left control
 column, a raw-hex canvas and a graph drawn over the map). Vendored **Claude Basic 0.6.0**
